@@ -1,7 +1,7 @@
 package com.quanticheart.conn.client
 
 import android.annotation.SuppressLint
-import com.quanticheart.connection.BuildConfig
+import com.quanticheart.conn.BuildConfig
 import com.quanticheart.conn.model.ConnectionModel
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
