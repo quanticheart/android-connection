@@ -2,12 +2,11 @@ package com.quanticheart.conn.client
 
 import android.annotation.SuppressLint
 import com.quanticheart.conn.BuildConfig
-import com.quanticheart.conn.model.ConnectionModel
+import com.quanticheart.conn.config.ApiConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -16,34 +15,28 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 import javax.security.cert.CertificateException
 
-fun Retrofit.getApiList(connectionModel: ConnectionModel): Any? =
-    this.create(connectionModel.retrofitInterface)
+object RetrofitCreate {
 
-object RetrofitClient {
-
-    fun getConnect(connectionModel: ConnectionModel) =
-        getClient(connectionModel).getApiList(connectionModel)
-
-    private fun getClient(connectionModel: ConnectionModel): Retrofit {
-        val header = getOkHTTP(connectionModel)
-        return Retrofit.Builder()
-            .baseUrl(connectionModel.baseUrl)
+    inline fun <reified T> createConn(apiConfig: ApiConfig): T {
+        val header = createHeader(apiConfig)
+        val r = Retrofit.Builder()
+            .baseUrl(apiConfig.baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(header)
             .build()
+
+        return r.create(T::class.java)
     }
 
-    private fun getOkHTTP(connectionModel: ConnectionModel): OkHttpClient {
+    fun createHeader(connectionModel: ApiConfig): OkHttpClient {
         val client: OkHttpClient.Builder = OkHttpClient.Builder()
         val interceptor = Interceptor { chain ->
             val request = chain.request().newBuilder()
-            connectionModel.header?.forEach { map ->
+            connectionModel.header.forEach { map ->
                 request.addHeader(map.key, map.value)
             }
             chain.proceed(request.build())
         }
-
         setOkHTTPSettings(client, interceptor, connectionModel)
         setSllConfig(client)
         return client.build()
@@ -52,7 +45,7 @@ object RetrofitClient {
     private fun setOkHTTPSettings(
         client: OkHttpClient.Builder,
         interceptorWithHeaders: Interceptor,
-        connectionModel: ConnectionModel
+        connectionModel: ApiConfig
     ) {
         client.addInterceptor(interceptorWithHeaders)
         client.connectTimeout(connectionModel.connectionTimeOutMin.toLong(), TimeUnit.MINUTES)
