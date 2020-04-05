@@ -1,11 +1,11 @@
 @file:Suppress("unused")
 
-package com.quanticheart.connection.api.endpoints.entity
+package com.quanticheart.connection.endpoints.entity
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class PokemonList {
+class DataList {
     @SerializedName("count")
     @Expose
     var count: Int? = null
@@ -17,14 +17,5 @@ class PokemonList {
     var previous: String? = null
     @SerializedName("results")
     @Expose
-    var results: List<PokemonResultList>? = null
-
-    inner class PokemonResultList {
-        @SerializedName("name")
-        @Expose
-        var name: String? = null
-        @SerializedName("url")
-        @Expose
-        var url: String? = null
-    }
+    var results: List<Data>? = null
 }

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.quanticheart.conn.extentions
 
 import android.util.Log
@@ -14,12 +16,12 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.HttpsURLConnection
 
-const val retryDefault = 2
+const val retryDefault = 0
 
 /**
  * Conn Genetic functions
  */
-inline fun <reified T> Call<T>.conn(
+inline fun <reified T> Call<T>.connect(
     crossinline success: (T) -> Unit,
     noinline error: (Throwable) -> Unit,
     retry: Int = retryDefault
@@ -27,14 +29,14 @@ inline fun <reified T> Call<T>.conn(
     this.enqueueWithRetry(success, error, retry)
 }
 
-inline fun <reified T> Call<T>.conn(
+inline fun <reified T> Call<T>.connect(
     crossinline success: ((T) -> Unit),
     retry: Int = retryDefault
 ) {
     this.enqueueWithRetry(success, null, retry)
 }
 
-inline fun <reified T> Call<T>.conn(
+inline fun <reified T> Call<T>.connect(
     crossinline success: ((T) -> Unit)
 ) {
     this.enqueueWithRetry(success, null, retryDefault)
@@ -48,7 +50,7 @@ inline fun <reified T> Call<T>.enqueueWithRetry(
     noinline fail: ((Throwable) -> Unit)? = null,
     retry: Int = retryDefault
 ) {
-    var countRetry = 1
+    var countRetry = 2
     this.enqueue(object : Callback<T> {
         override fun onFailure(call: Call<T>, t: Throwable) {
             if (countRetry <= retry) {
@@ -112,7 +114,6 @@ fun Throwable?.responseError(msg: String? = null): Throwable {
 /**
  * Success
  */
-
 inline fun <reified T> Response<T>.responseSuccess(
     crossinline success: (T) -> Unit,
     noinline fail: ((Throwable) -> Unit)? = null

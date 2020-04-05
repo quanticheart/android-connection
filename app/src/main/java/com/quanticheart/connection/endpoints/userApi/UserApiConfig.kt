@@ -1,11 +1,11 @@
-package com.quanticheart.connection.api.endpoints.config.headers
+package com.quanticheart.connection.endpoints.userApi
 
 import android.app.Activity
 import com.quanticheart.conn.config.ApiConfig
 import com.quanticheart.connection.BuildConfig
 
-class ApiConfig(private val activity: Activity? = null) : ApiConfig() {
-    override var baseUrl: String = "https://pokeapi.co/api/v2/"
+class UserApiConfig(private val activity: Activity? = null) : ApiConfig() {
+    override var baseUrl: String = "https://data.co/api/v2/"
     override var header: HashMap<String, String> = createHeader().apply {
         put("Api-Key", "TESTES")
         put("Api-Key-2", "TESTES")
@@ -18,7 +18,6 @@ class ApiConfig(private val activity: Activity? = null) : ApiConfig() {
         }
         //OR
         put("ACTIVITY-KEY-2", activity?.localClassName ?: "NULL")
-
-        connectionTimeOutMin = 1
     }
+    override var connectionTimeOutMin: Int = 1
 }
