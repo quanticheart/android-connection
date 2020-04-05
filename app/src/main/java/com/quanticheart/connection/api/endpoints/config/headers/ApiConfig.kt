@@ -1,4 +1,4 @@
-package com.quanticheart.connection.api.config.headers
+package com.quanticheart.connection.api.endpoints.config.headers
 
 import android.app.Activity
 import com.quanticheart.conn.config.ApiConfig

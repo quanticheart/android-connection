@@ -1,4 +1,4 @@
-package com.quanticheart.connection.api.entity.data
+package com.quanticheart.connection.api.endpoints.entity.data
 
 import com.google.gson.annotations.SerializedName
 
@@ -14,9 +14,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 
 
-data class Stats(
+data class Stat(
 
-    @SerializedName("base_stat") val base_stat: Int,
-    @SerializedName("effort") val effort: Int,
-    @SerializedName("stat") val stat: Stat
+    @SerializedName("name") val name: String,
+    @SerializedName("url") val url: String
 )

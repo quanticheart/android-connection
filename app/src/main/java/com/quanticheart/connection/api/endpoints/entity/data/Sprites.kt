@@ -1,4 +1,4 @@
-package com.quanticheart.connection.api.entity.data
+package com.quanticheart.connection.api.endpoints.entity.data
 
 import com.google.gson.annotations.SerializedName
 
@@ -14,8 +14,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 
 
-data class Move(
+data class Sprites(
 
-    @SerializedName("name") val name: String,
-    @SerializedName("url") val url: String
+    @SerializedName("back_default") val back_default: String,
+    @SerializedName("back_female") val back_female: String,
+    @SerializedName("back_shiny") val back_shiny: String,
+    @SerializedName("back_shiny_female") val back_shiny_female: String,
+    @SerializedName("front_default") val front_default: String,
+    @SerializedName("front_female") val front_female: String,
+    @SerializedName("front_shiny") val front_shiny: String,
+    @SerializedName("front_shiny_female") val front_shiny_female: String
 )

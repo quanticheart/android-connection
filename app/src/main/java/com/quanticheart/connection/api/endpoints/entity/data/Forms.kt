@@ -1,4 +1,4 @@
-package com.quanticheart.connection.api.entity.data
+package com.quanticheart.connection.api.endpoints.entity.data
 
 import com.google.gson.annotations.SerializedName
 

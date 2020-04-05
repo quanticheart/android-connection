@@ -1,4 +1,4 @@
-package com.quanticheart.connection.api.entity.data
+package com.quanticheart.connection.api.endpoints.entity.data
 
 import com.google.gson.annotations.SerializedName
 
@@ -14,8 +14,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 
 
-data class GameIndices(
+data class Move(
 
-    @SerializedName("game_index") val game_index: Int,
-    @SerializedName("version") val version: Version
+    @SerializedName("name") val name: String,
+    @SerializedName("url") val url: String
 )

@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.quanticheart.connection.api.entity
+package com.quanticheart.connection.api.endpoints.entity
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

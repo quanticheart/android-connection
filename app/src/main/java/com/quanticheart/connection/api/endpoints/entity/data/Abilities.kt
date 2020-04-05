@@ -1,4 +1,4 @@
-package com.quanticheart.connection.api.entity.data
+package com.quanticheart.connection.api.endpoints.entity.data
 
 import com.google.gson.annotations.SerializedName
 
@@ -14,8 +14,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 
 
-data class MoveLearnMethod(
+data class Abilities(
 
-    @SerializedName("name") val name: String,
-    @SerializedName("url") val url: String
+    @SerializedName("ability") val ability: Ability,
+    @SerializedName("is_hidden") val is_hidden: Boolean,
+    @SerializedName("slot") val slot: Int
 )
