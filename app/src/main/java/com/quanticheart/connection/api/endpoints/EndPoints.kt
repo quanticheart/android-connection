@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface EndPoints {
-    @GET("pokemoni?limit=5&offset=0")
+    @GET("pokemon?limit=5&offset=0")
     fun getPokemonList(): Call<PokemonList>
 
     @GET("pokemon/{id}")

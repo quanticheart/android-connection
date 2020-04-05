@@ -14,33 +14,54 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.net.ssl.HttpsURLConnection
 
+const val retryDefault = 2
+
 /**
  * Conn Genetic functions
  */
 inline fun <reified T> Call<T>.conn(
     crossinline success: (T) -> Unit,
-    crossinline error: (Throwable) -> Unit
+    noinline error: (Throwable) -> Unit,
+    retry: Int = retryDefault
 ) {
-    this.enqueue(object : Callback<T> {
-        override fun onFailure(call: Call<T>, t: Throwable) {
-            error(t.responseError())
-        }
-
-        override fun onResponse(call: Call<T>, response: Response<T>) {
-            response.responseSuccess(success, error)
-        }
-    })
+    this.enqueueWithRetry(success, error, retry)
 }
 
-inline fun <reified T> Call<T>.conn(crossinline callback: ((T) -> Unit)) {
+inline fun <reified T> Call<T>.conn(
+    crossinline success: ((T) -> Unit),
+    retry: Int = retryDefault
+) {
+    this.enqueueWithRetry(success, null, retry)
+}
+
+inline fun <reified T> Call<T>.conn(
+    crossinline success: ((T) -> Unit)
+) {
+    this.enqueueWithRetry(success, null, retryDefault)
+}
+
+/**
+ * Retry connection
+ */
+inline fun <reified T> Call<T>.enqueueWithRetry(
+    crossinline success: (T) -> Unit,
+    noinline fail: ((Throwable) -> Unit)? = null,
+    retry: Int = retryDefault
+) {
+    var countRetry = 1
     this.enqueue(object : Callback<T> {
         override fun onFailure(call: Call<T>, t: Throwable) {
+            if (countRetry <= retry) {
+                Log.w("Connection fail", "Retry Connection - $countRetry")
+                this@enqueueWithRetry.clone().enqueue(this)
+                countRetry++
+            } else {
+                fail?.invoke(t.responseError())
+            }
         }
 
         override fun onResponse(call: Call<T>, response: Response<T>) {
-//            response.responseSuccess()?.let {
-//                callback(it)
-//            }
+            response.responseSuccess(success, fail)
         }
     })
 }
@@ -73,18 +94,15 @@ fun Throwable?.responseError(msg: String? = null): Throwable {
             }
         }
         is JsonSyntaxException -> {
-            Throwable("Something Went Wrong API is not responding properly!")
+            Throwable("Response is error (Call Application support)")
         }
         is SocketTimeoutException -> {
             Throwable("Connection Timeout")
         }
-        is UnknownHostException->{
+        is UnknownHostException -> {
             Throwable("No connection")
         }
         is IOException -> {
-            Throwable("Timeout")
-        }
-        is JsonSyntaxException -> {
             Throwable("Timeout")
         }
         else -> msg?.let { Throwable(msg) } ?: run { Throwable("Error this") }
@@ -97,7 +115,7 @@ fun Throwable?.responseError(msg: String? = null): Throwable {
 
 inline fun <reified T> Response<T>.responseSuccess(
     crossinline success: (T) -> Unit,
-    crossinline error: (Throwable) -> Unit
+    noinline fail: ((Throwable) -> Unit)? = null
 ) {
 
     if (body() is BaseResponse<*>) {
@@ -109,24 +127,24 @@ inline fun <reified T> Response<T>.responseSuccess(
             body()?.let {
                 success(it)
             } ?: run {
-                error(Throwable("Response is null"))
+                fail?.let { it(Throwable("Response is null")) }
             }
         }
-        code() == 404 -> error(Throwable("Api Not Found"))
+        code() == 404 -> fail?.invoke(Throwable("Api Not Found"))
         code() >= 400 -> {
             errorBody()?.let {
                 try {
                     val r = GsonBuilder().create().fromJson(it.toString(), T::class.java)
                     success(r)
                 } catch (e: java.lang.Exception) {
-                    error(e.responseError())
+                    fail?.invoke(e.responseError())
                 }
             } ?: run {
-                error(Throwable("Response is null"))
+                fail?.invoke(Throwable("Response is null"))
             }
         }
         else -> {
-            error(Throwable("Uncknown error"))
+            fail?.invoke(Throwable("Uncknown error"))
         }
     }
 }

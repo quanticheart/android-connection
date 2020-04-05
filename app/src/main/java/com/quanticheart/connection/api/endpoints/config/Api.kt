@@ -16,7 +16,7 @@ fun Activity.getPokemonList() {
     val api = RetrofitCreate.createConn<EndPoints>(config)
     api.getPokemonList().conn({
         Log.e("Lista", it?.results.toString())
-    },{
+    }, {
         Log.e("ERROR", it.message)
-    })
+    }, 10)
 }
