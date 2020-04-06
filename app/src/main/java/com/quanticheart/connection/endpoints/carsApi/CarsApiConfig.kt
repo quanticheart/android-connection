@@ -13,5 +13,5 @@ class CarsApiConfig(private val context: Context) : ApiConfig() {
         put("User-Api-Token", "fklsdflkehfuwehfiuehfjkwhfjksdhfebfjhwg")
 
     }
-
+    override var consoleLog: Boolean = BuildConfig.DEBUG
 }
