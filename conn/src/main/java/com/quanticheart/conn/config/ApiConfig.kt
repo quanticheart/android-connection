@@ -4,6 +4,7 @@ abstract class ApiConfig {
     abstract var baseUrl: String
     open var header: HashMap<String, String> = HashMap()
     open var connectionTimeOutMin: Int = 2
+    open var showLog = false
 
     fun addHeader(key: String, data: String) {
         header[key] = data

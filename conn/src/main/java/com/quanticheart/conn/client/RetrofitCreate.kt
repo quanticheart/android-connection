@@ -1,7 +1,6 @@
 package com.quanticheart.conn.client
 
 import android.annotation.SuppressLint
-import com.quanticheart.conn.BuildConfig
 import com.quanticheart.conn.config.ApiConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -53,7 +52,7 @@ object RetrofitCreate {
         client.readTimeout(connectionModel.connectionTimeOutMin.toLong(), TimeUnit.MINUTES)
 
         val log = HttpLoggingInterceptor()
-        when (BuildConfig.DEBUG) {
+        when (connectionModel.showLog) {
             true -> log.level = HttpLoggingInterceptor.Level.BODY
             false -> log.level = HttpLoggingInterceptor.Level.NONE
         }
