@@ -52,7 +52,7 @@ object RetrofitCreate {
         client.readTimeout(connectionModel.connectionTimeOutMin.toLong(), TimeUnit.MINUTES)
 
         val log = HttpLoggingInterceptor()
-        when (connectionModel.showLog) {
+        when (connectionModel.consoleLog) {
             true -> log.level = HttpLoggingInterceptor.Level.BODY
             false -> log.level = HttpLoggingInterceptor.Level.NONE
         }
